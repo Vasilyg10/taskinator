@@ -35,8 +35,6 @@ var taskFormHandler = function(event) {
         // send it as an argument to createTaskEl
         createTaskEl(taskDataObj);
     }
-
-    formEl.reset();
 };
 
 var completeEditTask = function(taskName, taskType, taskId) {
@@ -134,8 +132,6 @@ var createTaskActions = function(taskId) {
     return actionContainerEl;
 };
 
-formEl.addEventListener("submit", taskFormHandler);
-
 var taskButtonHandler = function(event) {
     var targetEl = event.target;
 
@@ -150,8 +146,6 @@ var taskButtonHandler = function(event) {
         deleteTask(taskId);
     }
 };
-
-pageContentEl.addEventListener("click", taskButtonHandler);
 
 var deleteTask = function(taskId) {
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
@@ -224,4 +218,30 @@ var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+var loadTasks = function () {
+    // Gets task items from localStorage.
+    // Converts tasks from the string format back into an array of objects.
+    var savedTasks = localStorage.getItem("tasks");
+
+    // Iterates through a tasks array and creates task elements on the page from it.
+    
+    if (!savedTasks) {
+        return false;
+    }
+
+    savedTasks = JSON.parse(savedTasks);
+
+    // loop through savedTasks array
+    for (var i = 0; i < savedTasks.length; i++) {
+        // pass each task object into the 'creativeTaskEl()' function
+        createTaskEl(savedTasks[i]);
+    }    
+};
+
+formEl.addEventListener("submit", taskFormHandler);
+
+pageContentEl.addEventListener("click", taskButtonHandler);
+
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
+loadTasks();
